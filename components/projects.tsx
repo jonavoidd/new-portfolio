@@ -154,7 +154,7 @@ export const projects = [
       "A portfolio website for an interior designer to showcase their work.",
     image: "/assets/projects/designer-ss.png",
     tags: ["React.js", "Tailwind CSS", "Portfolio", "Responsive Design"],
-    demoLink: "",
+    demoLink: "https://gedinteriordesigns.netlify.app/",
     longDescription:
       "A visually striking portfolio website designed to showcase an interior designer's projects and services. The website features a clean, modern aesthetic with responsive galleries that highlight the designer's work while maintaining excellent performance across all devices.",
     features: [
