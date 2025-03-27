@@ -6,7 +6,7 @@ import AnimationWrapper from "./animation-wrapper";
 export default function Hero() {
   return (
     <section id="home" className="py-24 md:py_32">
-      <div className="container flex justify-center items-center px-4 md:px-6 h-[500]">
+      <div className="container flex justify-center items-center px-4 md:px-6 h-[700]">
         <div className="flex flex-col items-center gap-4 text-center">
           <AnimationWrapper>
             <div className="space-y-2">
