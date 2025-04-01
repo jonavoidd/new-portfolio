@@ -81,6 +81,7 @@ export default function Contact() {
         });
       }
     } catch (error) {
+      console.error(error);
       setFormState("error");
       setErrorMessage(
         "Network error. Please check your connection and try again."
