@@ -14,45 +14,85 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Mail, MapPin, Phone } from "lucide-react";
+import {
+  Mail,
+  MapPin,
+  Phone,
+  Loader2,
+  CheckCircle,
+  AlertCircle,
+} from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 import AnimationWrapper from "./animation-wrapper";
 
+const FORMSPREE_FORM_ID = "xgvalgre";
+
 export default function Contact() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    subject: "",
-    message: "",
-  });
+  const { toast } = useToast();
+  const [formState, setFormState] = useState<
+    "idle" | "submitting" | "success" | "error"
+  >("idle");
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setIsSubmitting(true);
 
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    try {
+      setFormState("submitting");
 
-    // Reset form
-    setFormData({
-      name: "",
-      email: "",
-      subject: "",
-      message: "",
-    });
-    setIsSubmitting(false);
+      const form = e.currentTarget;
+      const formData = new FormData(form);
 
-    // In a real application, you would send the form data to your backend or a form service
-    console.log("Form submitted:", formData);
-  };
+      // Submit to Formspree
+      const response = await fetch(
+        `https://formspree.io/f/${FORMSPREE_FORM_ID}`,
+        {
+          method: "POST",
+          body: formData,
+          headers: {
+            Accept: "application/json",
+          },
+        }
+      );
+
+      const responseData = await response.json();
+
+      if (response.ok) {
+        setFormState("success");
+        toast({
+          title: "Message sent!",
+          description: "Thank you for your message. I'll get back to you soon.",
+          variant: "default",
+        });
+
+        // Reset form
+        form.reset();
+      } else {
+        setFormState("error");
+        setErrorMessage(
+          responseData.error || "There was a problem sending your message."
+        );
+        toast({
+          title: "Error sending message",
+          description:
+            responseData.error ||
+            "There was a problem sending your message. Please try again.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      setFormState("error");
+      setErrorMessage(
+        "Network error. Please check your connection and try again."
+      );
+      toast({
+        title: "Error sending message",
+        description:
+          "Network error. Please check your connection and try again.",
+        variant: "destructive",
+      });
+    }
+  }
 
   return (
     <section id="contact" className="py-16 md:py-24 bg-muted/50">
@@ -92,10 +132,9 @@ export default function Contact() {
                         id="name"
                         name="name"
                         placeholder="Your name"
-                        value={formData.name}
-                        onChange={handleChange}
                         required
                         className="border-blue-200 dark:border-blue-800 focus:ring-blue-500"
+                        disabled={formState === "submitting"}
                       />
                     </div>
                     <div className="space-y-2">
@@ -105,10 +144,9 @@ export default function Contact() {
                         name="email"
                         type="email"
                         placeholder="Your email"
-                        value={formData.email}
-                        onChange={handleChange}
                         required
                         className="border-blue-200 dark:border-blue-800 focus:ring-blue-500"
+                        disabled={formState === "submitting"}
                       />
                     </div>
                   </div>
@@ -118,10 +156,9 @@ export default function Contact() {
                       id="subject"
                       name="subject"
                       placeholder="Subject"
-                      value={formData.subject}
-                      onChange={handleChange}
                       required
                       className="border-blue-200 dark:border-blue-800 focus:ring-blue-500"
+                      disabled={formState === "submitting"}
                     />
                   </div>
                   <div className="space-y-2">
@@ -130,18 +167,47 @@ export default function Contact() {
                       id="message"
                       name="message"
                       placeholder="Your message"
-                      value={formData.message}
-                      onChange={handleChange}
                       required
                       className="min-h-[120px] border-blue-200 dark:border-blue-800 focus:ring-blue-500"
+                      disabled={formState === "submitting"}
                     />
                   </div>
+
+                  {/* Honeypot field to prevent spam */}
+                  <input
+                    type="text"
+                    name="_gotcha"
+                    style={{ display: "none" }}
+                  />
+
+                  {formState === "success" && (
+                    <div className="flex items-center p-3 text-sm rounded-md bg-green-50 text-green-600 dark:bg-green-900/20 dark:text-green-400">
+                      <CheckCircle className="h-4 w-4 mr-2" />
+                      Your message has been sent successfully!
+                    </div>
+                  )}
+
+                  {formState === "error" && (
+                    <div className="flex items-center p-3 text-sm rounded-md bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400">
+                      <AlertCircle className="h-4 w-4 mr-2" />
+                      {errorMessage ||
+                        "There was an error sending your message. Please try again."}
+                    </div>
+                  )}
+
                   <Button
                     type="submit"
                     className="w-full bg-blue-500 hover:bg-blue-600"
-                    disabled={isSubmitting}
+                    disabled={formState === "submitting"}
                   >
-                    {isSubmitting ? "Sending..." : "Send Message"}
+                    {formState === "submitting" ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Sending...
+                      </>
+                    ) : (
+                      "Send Message"
+                    )}
                   </Button>
                 </form>
               </CardContent>
@@ -164,7 +230,7 @@ export default function Contact() {
                   <div>
                     <h3 className="font-medium">Email</h3>
                     <p className="text-sm text-muted-foreground">
-                      kurtjonathangozano@gmail.com
+                      contact@example.com
                     </p>
                   </div>
                 </div>
@@ -173,7 +239,7 @@ export default function Contact() {
                   <div>
                     <h3 className="font-medium">Phone</h3>
                     <p className="text-sm text-muted-foreground">
-                      +63 927 329 0535
+                      +1 (555) 123-4567
                     </p>
                   </div>
                 </div>
@@ -182,7 +248,7 @@ export default function Contact() {
                   <div>
                     <h3 className="font-medium">Location</h3>
                     <p className="text-sm text-muted-foreground">
-                      Cebu City, Cebu
+                      San Francisco, CA
                     </p>
                   </div>
                 </div>
@@ -193,10 +259,10 @@ export default function Contact() {
                       variant="outline"
                       size="icon"
                       asChild
-                      className="border-blue-200 dark:border-blue-800 text-blue-500 hover:bg-blue-50 hover:text-500 dark:hover:text-white dark:hover:bg-blue-900/20"
+                      className="border-blue-200 dark:border-blue-800 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20"
                     >
                       <a
-                        href="https://github.com/jonavoidd"
+                        href="https://github.com"
                         target="_blank"
                         rel="noopener noreferrer"
                       >
@@ -219,10 +285,10 @@ export default function Contact() {
                       variant="outline"
                       size="icon"
                       asChild
-                      className="border-blue-200 dark:border-blue-800 text-blue-500 hover:bg-blue-50 hover:text-500 dark:hover:text-white dark:hover:bg-blue-900/20"
+                      className="border-blue-200 dark:border-blue-800 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20"
                     >
                       <a
-                        href="https://www.linkedin.com/in/kurt-jonathan-gozano/"
+                        href="https://linkedin.com"
                         target="_blank"
                         rel="noopener noreferrer"
                       >
@@ -247,22 +313,26 @@ export default function Contact() {
                       variant="outline"
                       size="icon"
                       asChild
-                      className="border-blue-200 dark:border-blue-800 text-blue-600 hover:bg-blue-100 hover:text-500 dark:hover:text-white dark:hover:bg-blue-900/20"
+                      className="border-blue-200 dark:border-blue-800 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20"
                     >
                       <a
-                        href="https://web.facebook.com/kurtjonathan.gozano.75"
+                        href="https://twitter.com"
                         target="_blank"
                         rel="noopener noreferrer"
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           viewBox="0 0 24 24"
-                          fill="currentColor"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
                           className="h-5 w-5"
                         >
-                          <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"></path>
+                          <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>
                         </svg>
-                        <span className="sr-only">Facebook</span>
+                        <span className="sr-only">Twitter</span>
                       </a>
                     </Button>
                   </div>
