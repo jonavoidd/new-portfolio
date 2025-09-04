@@ -231,7 +231,7 @@ export default function Contact() {
                   <div>
                     <h3 className="font-medium">Email</h3>
                     <p className="text-sm text-muted-foreground">
-                      contact@example.com
+                      kurtjonathangozano@gmail.com
                     </p>
                   </div>
                 </div>
@@ -240,7 +240,7 @@ export default function Contact() {
                   <div>
                     <h3 className="font-medium">Phone</h3>
                     <p className="text-sm text-muted-foreground">
-                      +1 (555) 123-4567
+                      +63 927 329 0535
                     </p>
                   </div>
                 </div>
@@ -249,7 +249,7 @@ export default function Contact() {
                   <div>
                     <h3 className="font-medium">Location</h3>
                     <p className="text-sm text-muted-foreground">
-                      San Francisco, CA
+                      Cebu City, Cebu, Philippines
                     </p>
                   </div>
                 </div>
@@ -263,7 +263,7 @@ export default function Contact() {
                       className="border-blue-200 dark:border-blue-800 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20"
                     >
                       <a
-                        href="https://github.com"
+                        href="https://github.com/jonavoidd/"
                         target="_blank"
                         rel="noopener noreferrer"
                       >
@@ -289,7 +289,7 @@ export default function Contact() {
                       className="border-blue-200 dark:border-blue-800 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20"
                     >
                       <a
-                        href="https://linkedin.com"
+                        href="https://www.linkedin.com/in/kurt-jonathan-gozano/"
                         target="_blank"
                         rel="noopener noreferrer"
                       >
@@ -308,32 +308,6 @@ export default function Contact() {
                           <circle cx="4" cy="4" r="2"></circle>
                         </svg>
                         <span className="sr-only">LinkedIn</span>
-                      </a>
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      asChild
-                      className="border-blue-200 dark:border-blue-800 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20"
-                    >
-                      <a
-                        href="https://twitter.com"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="h-5 w-5"
-                        >
-                          <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>
-                        </svg>
-                        <span className="sr-only">Twitter</span>
                       </a>
                     </Button>
                   </div>

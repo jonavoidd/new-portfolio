@@ -4,15 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import {
-  Mail,
-  Github,
-  Linkedin,
-  ArrowUp,
-  MapPin,
-  Phone,
-  Facebook,
-} from "lucide-react";
+import { Mail, Github, Linkedin, ArrowUp, MapPin, Phone } from "lucide-react";
 import AnimationWrapper from "./animation-wrapper";
 import { useSmoothScroll } from "@/hooks/use-smooth-scroll";
 
@@ -199,21 +191,6 @@ export default function Footer() {
                     rel="noopener noreferrer"
                   >
                     <Linkedin className="h-4 w-4" />
-                  </a>
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  asChild
-                  className="h-9 w-9 rounded-full text-muted-foreground hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20"
-                  aria-label="Facebook Profile"
-                >
-                  <a
-                    href="https://web.facebook.com/kurtjonathan.gozano.75"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Facebook className="h-4 w-4" />
                   </a>
                 </Button>
               </div>
